@@ -20,7 +20,7 @@ const (
 	defaultIPv4OpenAddress = "0.0.0.0"
 )
 
-func ServeOpenAPI(ctx context.Context, config serveOpenAPIConfig) error {
+func ServeOpenAPI(ctx context.Context, config *serveOpenAPIConfig) error {
 	log := zerolog.Ctx(ctx)
 
 	loader := openapi3.NewLoader()
