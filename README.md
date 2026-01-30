@@ -65,3 +65,7 @@ Callers can implement the following interface to authenticate API operations:
 ```go
 AuthorizeCaller(ctx context.Context, ai *openapi3filter.AuthenticationInput) error
 ```
+
+## Releasing new version of the library
+
+Run `./scripts/update_library_version.sh` to automatically cut the next semver release of the library.
