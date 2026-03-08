@@ -1,7 +1,16 @@
 package ierr
 
-type Forbidden struct{}
+type TooManyRequestsError struct {
+	message string
+}
 
-func (e *Forbidden) Error() string {
-	return "Forbidden"
+func NewTooManyRequestsError(message string) *TooManyRequestsError {
+	return &TooManyRequestsError{message: message}
+}
+
+func (e *TooManyRequestsError) Error() string {
+	if e.message != "" {
+		return e.message
+	}
+	return "TooManyRequestsError"
 }
