@@ -9,9 +9,9 @@ import (
 	"github.com/rs/zerolog"
 )
 
-func ZeroLogConfiguration(logFile *os.File, isDevMode bool, serviceName, serviceVersion string) context.Context {
-	if isDevMode {
-		zerolog.SetGlobalLevel(zerolog.DebugLevel)
+func ZeroLogConfiguration(logFile *os.File, logLevel *zerolog.Level, serviceName, serviceVersion string) context.Context {
+	if logLevel != nil {
+		zerolog.SetGlobalLevel(*logLevel)
 	} else {
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	}
