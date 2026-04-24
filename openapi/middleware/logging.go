@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"bytes"
+	"encoding/json"
 	"io"
 	"time"
 
@@ -29,11 +30,19 @@ func LoggingMiddleware() gin.HandlerFunc {
 			c.Request.Body = io.NopCloser(bytes.NewBuffer(requestBody))
 		}
 
-		log.Info().
+		var incomingLog *zerolog.Event
+		if len(requestBody) > 0 && json.Valid(requestBody) {
+			incomingLog = log.Info().RawJSON("requestBody", requestBody)
+		} else if len(requestBody) > 0 {
+			incomingLog = log.Info().Str("requestBody", string(requestBody))
+		} else {
+			incomingLog = log.Info()
+		}
+
+		incomingLog.
 			Str("method", c.Request.Method).
 			Str("path", c.Request.URL.Path).
 			Interface("headers", c.Request.Header).
-			RawJSON("requestBody", requestBody).
 			Msg("API Request")
 
 		c.Next()
