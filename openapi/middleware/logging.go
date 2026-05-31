@@ -32,7 +32,12 @@ func LoggingMiddleware() gin.HandlerFunc {
 
 		var incomingLog *zerolog.Event
 		if len(requestBody) > 0 && json.Valid(requestBody) {
-			incomingLog = log.Info().RawJSON("requestBody", requestBody)
+			var compacted bytes.Buffer
+			if err := json.Compact(&compacted, requestBody); err == nil {
+				incomingLog = log.Info().RawJSON("requestBody", compacted.Bytes())
+			} else {
+				incomingLog = log.Info().Str("requestBody", string(requestBody))
+			}
 		} else if len(requestBody) > 0 {
 			incomingLog = log.Info().Str("requestBody", string(requestBody))
 		} else {
