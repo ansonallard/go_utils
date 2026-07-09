@@ -90,3 +90,19 @@ func LoggingMiddleware() gin.HandlerFunc {
 			Msg("API Response")
 	}
 }
+
+func RecoveryMiddleware(log *zerolog.Logger) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		defer func() {
+			if r := recover(); r != nil {
+				log.Error().
+					Interface("panic", r).
+					Str("path", c.Request.URL.Path).
+					Str("method", c.Request.Method).
+					Msg("panic recovered")
+				c.AbortWithStatus(500)
+			}
+		}()
+		c.Next()
+	}
+}
