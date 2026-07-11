@@ -76,6 +76,7 @@ func LoggingMiddleware() gin.HandlerFunc {
 
 		incomingLog.
 			Str("method", c.Request.Method).
+			Str("pattern", c.Request.Pattern).
 			Str("path", c.Request.URL.Path).
 			Interface("headers", c.Request.Header).
 			Msg("API Request")
@@ -86,6 +87,7 @@ func LoggingMiddleware() gin.HandlerFunc {
 			Int("status", c.Writer.Status()).
 			TimeDiff("latency", time.Now().UTC(), startTime).
 			Str("method", c.Request.Method).
+			Str("pattern", c.Request.Pattern).
 			Str("path", c.Request.URL.Path).
 			Msg("API Response")
 	}
@@ -98,6 +100,7 @@ func RecoveryMiddleware(log *zerolog.Logger) gin.HandlerFunc {
 				log.Error().
 					Interface("panic", r).
 					Str("path", c.Request.URL.Path).
+					Str("pattern", c.Request.Pattern).
 					Str("method", c.Request.Method).
 					Msg("panic recovered")
 				c.AbortWithStatus(500)
